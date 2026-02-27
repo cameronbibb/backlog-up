@@ -2,9 +2,13 @@ class UserGame < ApplicationRecord
   belongs_to :user
   belongs_to :game
 
+  VALID_STATUSES = ["backlog", "playing", "completed"]
+
+  validates :status, inclusion: { in: VALID_STATUSES }
+
   enum status: {
     backlog: "backlog",
-    playling: "playing",
+    playing: "playing",
     completed: "completed"
   }
 end

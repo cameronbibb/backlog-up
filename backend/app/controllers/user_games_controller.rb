@@ -7,7 +7,7 @@ class UserGamesController < ApplicationController
   end
 
   def create
-    user_game = current_user.user_games.build(user_game_params)
+    user_game = current_user.user_games.build(create_params)
     
     if user_game.save
       render json: user_game, status: :created
@@ -18,9 +18,26 @@ class UserGamesController < ApplicationController
     render json: { errors: [e.message] }, status: :unprocessable_entity
   end
 
+  def update
+
+    user_game = current_user.user_games.find(params[:id])
+
+    if user_game.update(update_params)
+      render json: user_game, status: :ok
+    else
+      render json: { errors: user_game.errors.full_messages }, status: :unprocessable_entity
+    end
+  rescue ArgumentError => e
+    render json: { errors: [e.message] }, status: :unprocessable_entity
+  end
+
   private
 
-  def user_game_params
+  def create_params
     params.require(:user_game).permit(:game_id, :status, :platform_owned)
+  end
+
+  def update_params
+    params.require(:user_game).permit(:status, :platform_owned)
   end
 end

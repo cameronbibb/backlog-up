@@ -19,7 +19,6 @@ class UserGamesController < ApplicationController
   end
 
   def update
-
     user_game = current_user.user_games.find(params[:id])
 
     if user_game.update(update_params)
@@ -29,6 +28,13 @@ class UserGamesController < ApplicationController
     end
   rescue ArgumentError => e
     render json: { errors: [e.message] }, status: :unprocessable_entity
+  end
+
+  def destroy
+    user_game = current_user.user_games.find(params[:id])
+    user_game.destroy
+
+    head :no_content
   end
 
   private

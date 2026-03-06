@@ -12,4 +12,9 @@ Rails.application.routes.draw do
   post '/login', to: 'authentication#login'
 
   resources :user_games, only: [:index, :create, :update, :destroy]
+  
+  resources :playlists, only: [:index, :create, :update, :show, :destroy] do
+    post 'games', to: 'playlists#add_game'
+    delete 'games/:game_id', to: 'playlists#remove_game'
+  end
 end

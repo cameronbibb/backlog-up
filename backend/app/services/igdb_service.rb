@@ -5,32 +5,33 @@ class IgdbService
   def initialize
     @client_id = ENV["TWITCH_CLIENT_ID"]
     @client_secret = ENV["TWITCH_CLIENT_SECRET"]
-    @access_token = null
+    @access_token = nil
   end
 
-  # Public methods (what controllers will call)
-  def search_games(query)
-    # 1. Get access token
-    # 2. Make request to IGDB search endpoint
-    # 3. Return parsed results
+  def search_games(query, limit: 10)
+    body = <<~QUERY
+      search "#{query}";
+      fields id,name,cover.url,first_release_date,summary;
+      limit #{limit};
+    QUERY
+
+    igdb_request("games", body)
   end
 
   def get_game(id)
-    # 1. Get access token
-    # 2. Make request to IGDB games endpoint for specific ID
-    # 3. Return parsed result
+    body = <<~QUERY
+      where id = #{id};
+      fields id,name,cover.url,first_release_date,summary,platforms.name;
+    QUERY
+    igdb_request("games", body).first
   end
 
   private
 
-  # Private helper methods
   def access_token
     Rails.cache.fetch("igdb_access_token", expires_in: 59.days) do
       fetch_access_token
     end
-    # 1. Return cached token if exists
-    # 2. Otherwise, fetch new token from Twitch
-    # 3. Cache it
   end
 
   def fetch_access_token

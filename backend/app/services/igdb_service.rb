@@ -24,7 +24,10 @@ class IgdbService
   private
 
   # Private helper methods
-  def get_access_token
+  def access_token
+    Rails.cache.fetch("igdb_access_token", expires_in: 59.days) do
+      fetch_access_token
+    end
     # 1. Return cached token if exists
     # 2. Otherwise, fetch new token from Twitch
     # 3. Cache it
@@ -44,7 +47,15 @@ class IgdbService
   end
 
   def igdb_request(endpoint, body)
-    # Generic method to make requests to IGDB
-    # Handles headers, auth, parsing
+    url = "#{IGDB_BASE_URL}/#{endpoint}"
+    response = HTTParty.post(
+      url,
+      headers: {
+        "Client-ID" => @client_id,
+        "Authorization" => "Bearer #{access_token}"
+      },
+      body: body
+    )
+    response.parsed_response
   end
 end

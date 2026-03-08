@@ -32,8 +32,9 @@ class IgdbService
   end
 
   def fetch_access_token
-    # Make POST request to Twitch OAuth
-    # Parse response, return token
+    response = HTTParty.post(TWITCH_AUTH_URL, body: {client_id: @client_id, client_secret: @client_secret, grant_type: 'client_credentials' } )
+
+    response.parsed_response['access_token']
   end
 
   def igdb_request(endpoint, body)

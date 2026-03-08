@@ -7,14 +7,14 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
-  # 
-  post '/signup', to: 'authentication#signup'
-  post '/login', to: 'authentication#login'
+  #
+  post "/signup", to: "authentication#signup"
+  post "/login", to: "authentication#login"
 
-  resources :user_games, only: [:index, :create, :update, :destroy]
-  
-  resources :playlists, only: [:index, :create, :update, :show, :destroy] do
-    post 'games', to: 'playlists#add_game'
-    delete 'games/:game_id', to: 'playlists#remove_game'
+  resources :user_games, only: [ :index, :create, :update, :destroy ]
+
+  resources :playlists, only: [ :index, :create, :update, :show, :destroy ] do
+    post "games", to: "playlists#add_game"
+    delete "games/:game_id", to: "playlists#remove_game"
   end
 end

@@ -1,11 +1,10 @@
 class IgdbService
-
   TWITCH_AUTH_URL = "https://id.twitch.tv/oauth2/token"
   IGDB_BASE_URL = "https://api.igdb.com/v4"
 
   def initialize
-    @client_id = ENV['TWITCH_CLIENT_ID']
-    @client_secret = ENV['TWITCH_CLIENT_SECRET']
+    @client_id = ENV["TWITCH_CLIENT_ID"]
+    @client_secret = ENV["TWITCH_CLIENT_SECRET"]
     @access_token = null
   end
 
@@ -32,9 +31,16 @@ class IgdbService
   end
 
   def fetch_access_token
-    response = HTTParty.post(TWITCH_AUTH_URL, body: {client_id: @client_id, client_secret: @client_secret, grant_type: 'client_credentials' } )
+    response = HTTParty.post(
+      TWITCH_AUTH_URL,
+      body: {
+        client_id: @client_id,
+        client_secret: @client_secret,
+        grant_type: "client_credentials"
+      }
+    )
 
-    response.parsed_response['access_token']
+    response.parsed_response["access_token"]
   end
 
   def igdb_request(endpoint, body)

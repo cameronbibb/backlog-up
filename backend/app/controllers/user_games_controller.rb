@@ -7,15 +7,21 @@ class UserGamesController < ApplicationController
   end
 
   def create
-    user_game = current_user.user_games.build(create_params)
-    
+    game = Game.find_or_create_from_igdb(create_params[:game_id])
+
+    user_game = current_user.user_games.build(
+      game: game,
+      status: create_params[:status],
+      platform_owned: create_params[:platform_owned]
+    )
+
     if user_game.save
-      render json: user_game, status: :created
+      render json: user_game, include: :game, status: :created
     else
       render json: { errors: user_game.errors.full_messages }, status: :unprocessable_entity
     end
   rescue ArgumentError => e
-    render json: { errors: [e.message] }, status: :unprocessable_entity
+    render json: { errors: [ e.message ] }, status: :unprocessable_entity
   end
 
   def update
@@ -27,7 +33,7 @@ class UserGamesController < ApplicationController
       render json: { errors: user_game.errors.full_messages }, status: :unprocessable_entity
     end
   rescue ArgumentError => e
-    render json: { errors: [e.message] }, status: :unprocessable_entity
+    render json: { errors: [ e.message ] }, status: :unprocessable_entity
   end
 
   def destroy

@@ -17,4 +17,7 @@ Rails.application.routes.draw do
     post "games", to: "playlists#add_game"
     delete "games/:game_id", to: "playlists#remove_game"
   end
+
+  get "/games/search", to: "games#search"
+  get "/games/:id", to: "games#show"
 end

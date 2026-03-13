@@ -5,7 +5,7 @@ class IgdbService
   def initialize
     @client_id = ENV["TWITCH_CLIENT_ID"]
     @client_secret = ENV["TWITCH_CLIENT_SECRET"]
-    @access_token = nil
+    @access_token = access_token
   end
 
   def search_games(query, limit: 10)

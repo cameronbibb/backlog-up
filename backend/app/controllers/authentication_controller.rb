@@ -6,8 +6,8 @@ class AuthenticationController < ApplicationController
     user = User.new(user_params)
 
     if user.save
-      token = encode_token({user_id: user.id})
-      render json: { token: token, user: {id: user.id, email: user.email } }, status: :created
+      token = encode_token({ user_id: user.id })
+      render json: { token: token, user: { id: user.id, email: user.email } }, status: :created
     else
       render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
     end
@@ -19,9 +19,9 @@ class AuthenticationController < ApplicationController
 
     if user&.authenticate(params[:password])
       token = encode_token({ user_id: user.id })
-      render json: { token: token, user: { id: user.id, email: user.email }}
+      render json: { token: token, user: { id: user.id, email: user.email } }
     else
-      render json: { error: 'Invalid email or password' }, status: :unauthorized
+      render json: { error: "Invalid email or password" }, status: :unauthorized
     end
   end
 

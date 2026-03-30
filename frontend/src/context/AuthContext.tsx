@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { setLogoutCallback, setAccessToken as setApiToken, refreshAccessToken } from "../services/apiClient";
+import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
   accessToken: string | null;
@@ -11,6 +12,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({children}: { children: React.ReactNode }) => {
+  const navigate = useNavigate();
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [user, setUser] = useState<{ id: number; email: string } | null >(null);
   
@@ -25,6 +27,7 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
     setAccessToken(null);
     setUser(null);
     setApiToken(null);
+    navigate('/login');
   }
 
   useEffect(() => setLogoutCallback(logout), []);

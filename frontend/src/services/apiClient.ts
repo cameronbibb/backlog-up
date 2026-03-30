@@ -23,8 +23,13 @@ apiClient.interceptors.request.use((config) => {
 
 //**When a response comes back as 401, silently call the refresh endpoint, store the new access token, and retry the original request, if the request fails again log the user out and communicate session ended.**
 
-const refreshAccessToken = async (): Promise<string> => {
-  const response = await axios.post(
+interface RefreshResponse {
+  access_token: string;
+  user: { id: number; email: string };
+}
+
+export const refreshAccessToken = async (): Promise<RefreshResponse> => {
+  const response = await axios.post<RefreshResponse>(
     "/auth/refresh",
     {},
     {
@@ -32,7 +37,7 @@ const refreshAccessToken = async (): Promise<string> => {
       withCredentials: true,
     },
   );
-  return response.data.access_token;
+  return response.data;
 };
 
 let logoutCallback: (() => void) | null = null;
@@ -49,7 +54,8 @@ apiClient.interceptors.response.use(
       error.config.url !== "/auth/refresh"
     ) {
       try {
-        const newToken = await refreshAccessToken();
+        const data = await refreshAccessToken();
+        const newToken = data.access_token;
         setAccessToken(newToken);
         error.config.headers.Authorization = `Bearer ${newToken}`;
         return apiClient(error.config);

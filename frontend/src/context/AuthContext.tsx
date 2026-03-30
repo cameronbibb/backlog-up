@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { setAccessToken as setApiToken } from "../services/apiClient";
+import { setLogoutCallback, setAccessToken as setApiToken, refreshAccessToken } from "../services/apiClient";
 
 interface AuthContextType {
   accessToken: string | null;
@@ -8,13 +8,9 @@ interface AuthContextType {
   logout: () => void;
 }
 
-//Where do these login and logout methods come from?
-//When and where do the accessToken and user get set?
-
-//AuthContext is initially null before login.
 const AuthContext = createContext<AuthContextType | null>(null);
 
-const AuthProvider = ({children}: { children: React.ReactNode }) => {
+export const AuthProvider = ({children}: { children: React.ReactNode }) => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [user, setUser] = useState<{ id: number; email: string } | null >(null);
   
@@ -26,12 +22,34 @@ const AuthProvider = ({children}: { children: React.ReactNode }) => {
   }
 
   const logout = () => {
-
+    setAccessToken(null);
+    setUser(null);
+    setApiToken(null);
   }
+
+  useEffect(() => setLogoutCallback(logout), []);
+
+  useEffect(() => {
+    async function silentRefresh () {
+      try {
+      const data = await refreshAccessToken();
+      login(data.access_token, data.user);
+      } catch {
+        //no valid session
+      }
+    }
+    silentRefresh();
+  }, []);
 
   return (
     <AuthContext.Provider value={{accessToken, user, login, logout}}>
       {children}
     </AuthContext.Provider>
   )
+}
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) throw new Error('useAuth must be used within an AuthProvider');
+  return context;
 }

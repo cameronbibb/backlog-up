@@ -1,4 +1,4 @@
-interface Game {
+export interface Game {
   id: number;
   name: string;
   cover_url: string;
@@ -9,7 +9,7 @@ interface Game {
   platforms: string[];
 }
 
-interface UserGame {
+export interface UserGame {
   id: number;
   user_id: number;
   game_id: number;
@@ -33,7 +33,7 @@ interface UserGame {
 //   leaving this here in case I want to add some sort of user profile page/viewer
 // }
 
-interface Playlist {
+export interface Playlist {
   id: number;
   name: string;
   user_id: number;

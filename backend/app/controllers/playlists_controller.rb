@@ -1,6 +1,6 @@
 class PlaylistsController < ApplicationController
   before_action :authorize_request
-  before_action :set_playlist, only: [:update, :show, :destroy, :add_game, :remove_game]
+  before_action :set_playlist, only: [ :update, :show, :destroy, :add_game, :remove_game ]
 
   def index
     playlists = current_user.playlists
@@ -52,7 +52,7 @@ class PlaylistsController < ApplicationController
   end
 
   private
-  
+
   def set_playlist
     id = params[:id] || params[:playlist_id]
     @playlist = current_user.playlists.find(id)

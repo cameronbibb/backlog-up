@@ -20,14 +20,14 @@ export interface UserGame {
   game: Game;
 }
 
-// interface IgdbGame {
-//   id: number;
-//   cover: { id: number; url: string };
-//   first_release_date: string;
-//   name: string;
-//   platforms: { id: number; name: string }[];
-//   summary: string;
-// }
+export interface IgdbGame {
+  id: number;
+  cover: { id: number; url: string };
+  first_release_date: string;
+  name: string;
+  platforms: { id: number; name: string }[];
+  summary: string;
+}
 
 // interface User {
 //   leaving this here in case I want to add some sort of user profile page/viewer

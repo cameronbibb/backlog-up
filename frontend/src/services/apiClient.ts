@@ -30,7 +30,7 @@ interface RefreshResponse {
 
 export const refreshAccessToken = async (): Promise<RefreshResponse> => {
   const response = await axios.post<RefreshResponse>(
-    "/auth/refresh",
+    "/refresh",
     {},
     {
       baseURL: API_BASE_URL,
@@ -49,10 +49,7 @@ export const setLogoutCallback = (cb: () => void) => {
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (
-      error.response?.status === 401 &&
-      error.config.url !== "/auth/refresh"
-    ) {
+    if (error.response?.status === 401 && error.config.url !== "/refresh") {
       try {
         const data = await refreshAccessToken();
         const newToken = data.access_token;

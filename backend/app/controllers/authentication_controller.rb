@@ -1,5 +1,6 @@
 class AuthenticationController < ApplicationController
   include JsonWebToken
+  include ActionController::Cookies
 
   # POST /signup
   def signup
@@ -15,6 +16,7 @@ class AuthenticationController < ApplicationController
         secure: Rails.env.production?
       }
       render json: { access_token: access_token, user: { id: user.id, email: user.email } }, status: :created
+      Rails.logger.debug "Cookies set: #{cookies[:refresh_token]}"
     else
       render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
     end

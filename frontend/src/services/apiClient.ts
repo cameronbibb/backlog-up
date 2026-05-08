@@ -1,4 +1,3 @@
-//1. Create an axios instance with your base URL
 import axios from "axios";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 

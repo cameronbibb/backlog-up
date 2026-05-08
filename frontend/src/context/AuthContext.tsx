@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { setLogoutCallback, setAccessToken as setApiToken, refreshAccessToken } from "../services/apiClient";
 import { useNavigate } from "react-router-dom";
 
@@ -23,14 +23,14 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
     setApiToken(token);
   }
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setAccessToken(null);
     setUser(null);
     setApiToken(null);
     navigate('/login');
-  }
+  }, [navigate]);
 
-  useEffect(() => setLogoutCallback(logout), []);
+  useEffect(() => setLogoutCallback(logout), [logout]);
 
   useEffect(() => {
     async function silentRefresh () {

@@ -1,7 +1,7 @@
 import apiClient from "./apiClient";
 
 interface AuthResponse {
-  token: string;
+  access_token: string;
   user: { id: number; email: string };
 }
 

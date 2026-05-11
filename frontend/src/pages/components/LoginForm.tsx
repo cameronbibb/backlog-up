@@ -9,8 +9,8 @@ function LoginForm() {
 
   async function handleSubmit(e: React.SubmitEvent) {
     e.preventDefault();
-    const { token, user } = await loginUser(email, password);
-    login(token, user);
+    const { access_token, user } = await loginUser(email, password);
+    login(access_token, user);
   }
 
   return (
@@ -32,7 +32,9 @@ function LoginForm() {
             onChange={(e) => setPassword(e.target.value)}
           ></input>
         </div>
-        <button type="submit">Submit</button>
+        <button type="submit" disabled={email === "" || password === ""}>
+          Submit
+        </button>
       </form>
     </>
   );

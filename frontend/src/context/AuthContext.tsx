@@ -1,42 +1,51 @@
-import { createContext, useContext, useState, useEffect, useCallback } from "react";
-import { setLogoutCallback, setAccessToken as setApiToken, refreshAccessToken } from "../services/apiClient";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
+import {
+  setLogoutCallback,
+  setAccessToken as setAPIAccessToken,
+  refreshAccessToken,
+} from "../services/apiClient";
 import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
   accessToken: string | null;
-  user: {id: number, email: string} | null;
-  login: (token: string, user: {id: number, email: string}) => void;
+  user: { id: number; email: string } | null;
+  login: (token: string, user: { id: number; email: string }) => void;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-export const AuthProvider = ({children}: { children: React.ReactNode }) => {
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
   const [accessToken, setAccessToken] = useState<string | null>(null);
-  const [user, setUser] = useState<{ id: number; email: string } | null >(null);
-  
+  const [user, setUser] = useState<{ id: number; email: string } | null>(null);
 
   const login = (token: string, user: { id: number; email: string }) => {
     setAccessToken(token);
     setUser(user);
-    setApiToken(token);
-  }
+    setAPIAccessToken(token);
+  };
 
   const logout = useCallback(() => {
     setAccessToken(null);
     setUser(null);
-    setApiToken(null);
-    navigate('/login');
+    setAPIAccessToken(null);
+    navigate("/login");
   }, [navigate]);
 
   useEffect(() => setLogoutCallback(logout), [logout]);
 
   useEffect(() => {
-    async function silentRefresh () {
+    async function silentRefresh() {
       try {
-      const data = await refreshAccessToken();
-      login(data.access_token, data.user);
+        const data = await refreshAccessToken();
+        login(data.access_token, data.user);
       } catch {
         //no valid session
       }
@@ -45,14 +54,14 @@ export const AuthProvider = ({children}: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{accessToken, user, login, logout}}>
+    <AuthContext value={{ accessToken, user, login, logout }}>
       {children}
-    </AuthContext.Provider>
-  )
-}
+    </AuthContext>
+  );
+};
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used within an AuthProvider');
+  if (!context) throw new Error("useAuth must be used within an AuthProvider");
   return context;
-}
+};

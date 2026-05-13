@@ -11,6 +11,7 @@ import {
   refreshAccessToken,
 } from "../services/apiClient";
 import { useNavigate } from "react-router-dom";
+import { logoutUser } from "../services/auth";
 
 interface AuthContextType {
   accessToken: string | null;
@@ -36,6 +37,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setAccessToken(null);
     setUser(null);
     setAPIAccessToken(null);
+    logoutUser();
     navigate("/login");
   }, [navigate]);
 

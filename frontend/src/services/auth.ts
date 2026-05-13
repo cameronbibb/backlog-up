@@ -11,9 +11,11 @@ export async function registerUser(
   password_confirmation: string,
 ): Promise<AuthResponse> {
   const response = await apiClient.post<AuthResponse>(`/signup`, {
-    email: email,
-    password: password,
-    password_confirmation: password_confirmation,
+    user: {
+      email: email,
+      password: password,
+      password_confirmation: password_confirmation,
+    },
   });
 
   return response.data;

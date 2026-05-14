@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { loginUser } from "../../services/auth";
 import { useAuth } from "../../context/AuthContext";
+import { Link } from "react-router-dom";
 
 function LoginForm() {
   const { login } = useAuth();
@@ -45,6 +46,7 @@ function LoginForm() {
           Submit
         </button>
       </form>
+      <Link to="/register">Register</Link>
     </>
   );
 }

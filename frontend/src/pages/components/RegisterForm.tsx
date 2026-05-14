@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { registerUser } from "../../services/auth";
 import { useAuth } from "../../context/AuthContext";
+import { Link } from "react-router-dom";
 
 function RegisterForm() {
   const { login } = useAuth();
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [confirmPasswordTouched, setConfirmPasswordTouched] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -80,6 +81,7 @@ function RegisterForm() {
           Submit
         </button>
       </form>
+      <Link to="/login">Login</Link>
     </>
   );
 }

@@ -1,11 +1,12 @@
 import AuthPage from "./pages/AuthPage";
-import { useAuth } from "./context/AuthContext";
-import { Routes, Route, Link } from "react-router";
+import { Navigate, Routes, Route } from "react-router";
 import LoginForm from "./pages/components/LoginForm";
 import RegisterForm from "./pages/components/RegisterForm";
+import Landing from "./pages/LandingPage";
+import Home from "./pages/HomePage";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
-  // const { accessToken, user } = useAuth();
   return (
     <>
       <Routes>
@@ -14,29 +15,11 @@ function App() {
           <Route path="login" element={<LoginForm />} />
           <Route path="register" element={<RegisterForm />} />
         </Route>
-        <Route path="home" element={<Home />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="home" element={<Home />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </>
-  );
-}
-
-function Home() {
-  const { logout } = useAuth();
-  return (
-    <>
-      <h1>Backlog Up</h1>
-      <p>Welcome to your game collection.</p>
-      <button onClick={logout}>Logout</button>
-    </>
-  );
-}
-
-function Landing() {
-  return (
-    <>
-      <h1>This is the Landing Page</h1>
-      <p>This page will have information about Backlog Up</p>
-      <Link to="/login">Login</Link>
     </>
   );
 }

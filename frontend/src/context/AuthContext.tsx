@@ -31,6 +31,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setAccessToken(token);
     setUser(user);
     setAPIAccessToken(token);
+    navigate("/home");
   };
 
   const logout = useCallback(() => {
@@ -38,7 +39,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setUser(null);
     setAPIAccessToken(null);
     logoutUser();
-    navigate("/login");
+    navigate("/");
   }, [navigate]);
 
   useEffect(() => setLogoutCallback(logout), [logout]);

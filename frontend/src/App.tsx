@@ -5,15 +5,18 @@ import RegisterForm from "./pages/components/RegisterForm";
 import Landing from "./pages/LandingPage";
 import Home from "./pages/HomePage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import GuestRoute from "./components/GuestRoute";
 
 function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route element={<AuthPage />}>
-          <Route path="login" element={<LoginForm />} />
-          <Route path="register" element={<RegisterForm />} />
+        <Route element={<GuestRoute />}>
+          <Route path="/" element={<Landing />} />
+          <Route element={<AuthPage />}>
+            <Route path="login" element={<LoginForm />} />
+            <Route path="register" element={<RegisterForm />} />
+          </Route>
         </Route>
         <Route element={<ProtectedRoute />}>
           <Route path="home" element={<Home />} />

@@ -1,10 +1,10 @@
 import { useAuth } from "../context/AuthContext";
 import { Outlet, Navigate } from "react-router-dom";
 
-function ProtectedRoute() {
+function GuestRoute() {
   const { accessToken, isLoading } = useAuth();
   if (isLoading) return <p>Loading...</p>;
-  return accessToken ? <Outlet /> : <Navigate to="/" replace />;
+  return accessToken ? <Navigate to="/home" replace /> : <Outlet />;
 }
 
-export default ProtectedRoute;
+export default GuestRoute;

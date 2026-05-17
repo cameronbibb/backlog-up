@@ -11,7 +11,7 @@ function RegisterForm() {
   const [confirmPasswordTouched, setConfirmPasswordTouched] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function handleSubmit(e: React.SubmitEvent) {
+  const handleSubmit = async (e: React.SubmitEvent) => {
     e.preventDefault();
     try {
       const { access_token, user } = await registerUser(
@@ -24,7 +24,7 @@ function RegisterForm() {
     } catch {
       setError("Registration failed. Please try again.");
     }
-  }
+  };
 
   return (
     <>

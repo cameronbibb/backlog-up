@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { getUserGames } from "../services/userGames";
 import { type UserGame, type IgdbGame } from "../types";
 import { searchGames } from "../services/games";
+import { formatReleaseYear } from "../utils";
 
 function Home() {
   const { logout } = useAuth();
@@ -20,11 +21,14 @@ function Home() {
     retrieveUserGames();
   }, []);
 
-  //search for game
   const searchGame = async () => {
     const data = await searchGames(searchText);
     console.log(data);
-    setFoundGames(data);
+    const formatted = data.map((gameObj) => ({
+      ...gameObj,
+      first_release_date: formatReleaseYear(gameObj.first_release_date),
+    }));
+    setFoundGames(formatted);
   };
   //add game to user games
   //-update the user games on add

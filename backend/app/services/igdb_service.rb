@@ -11,7 +11,7 @@ class IgdbService
   def search_games(query, limit: 10)
     body = <<~QUERY
       search "#{query}";
-      fields id,name,cover.url,first_release_date,summary;
+      fields id,name,cover.url,first_release_date,summary,platforms.name;
       limit #{limit};
     QUERY
 

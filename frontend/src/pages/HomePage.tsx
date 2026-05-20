@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { getUserGames } from "../services/userGames";
+import { getUserGames, addUserGame } from "../services/userGames";
 import { type UserGame, type IgdbGame } from "../types";
 import { searchGames } from "../services/games";
 import { formatReleaseYear } from "../utils";
@@ -10,6 +10,11 @@ function Home() {
   const [userGames, setUserGames] = useState<UserGame[]>([]);
   const [searchText, setSearchText] = useState("");
   const [foundGames, setFoundGames] = useState<IgdbGame[]>([]);
+  const [gameToAdd, setGameToAdd] = useState<IgdbGame | null>(null);
+  const [status, setStatus] = useState<"backlog" | "playing" | "completed">(
+    "backlog",
+  );
+  const [platformOwned, setPlatformOwned] = useState("");
 
   useEffect(() => {
     const retrieveUserGames = async () => {
@@ -21,7 +26,7 @@ function Home() {
     retrieveUserGames();
   }, []);
 
-  const searchGame = async () => {
+  const searchForGame = async () => {
     const data = await searchGames(searchText);
     console.log(data);
     const formatted = data.map((gameObj) => ({
@@ -32,6 +37,22 @@ function Home() {
   };
   //add game to user games
   //-update the user games on add
+
+  const handleDisplayGame = (game: IgdbGame) => {
+    console.log(game);
+    setGameToAdd(game);
+    if (game.platforms) {
+      setPlatformOwned(game.platforms[0].name);
+    }
+  };
+
+  const handleConfirmAdd = async () => {
+    if (!gameToAdd) {
+      return;
+    }
+    const response = await addUserGame(gameToAdd.id, status, platformOwned);
+    console.log(`game successfully added to your ${response.status} playlist`);
+  };
 
   //delete game from user games
   //-update user games on delete
@@ -48,14 +69,46 @@ function Home() {
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
         ></input>
-        <button onClick={searchGame}>search</button>
+        <button onClick={searchForGame}>search</button>
       </div>
+      {gameToAdd && (
+        <div>
+          <img src={gameToAdd?.cover.url} alt={gameToAdd?.name} />
+          <h3>Playlist:</h3>
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value as typeof status)}
+          >
+            <option value="backlog">backlog</option>
+            <option value="playing">playing</option>
+            <option value="completed">completed</option>
+          </select>
+          <h3>Platform:</h3>
+          <select
+            value={platformOwned}
+            onChange={(e) => setPlatformOwned(e.target.value)}
+          >
+            {gameToAdd?.platforms?.map((platform) => {
+              return (
+                <option key={platform.id} value={platform.name}>
+                  {platform.name}
+                </option>
+              );
+            })}
+          </select>
+          <div>
+            <button onClick={handleConfirmAdd}>add game</button>
+          </div>
+        </div>
+      )}
       <div>
         {foundGames && (
           <ul>
             {foundGames.map((game) => (
               <li key={game.id}>
-                {game.name} {game.first_release_date}
+                <a onClick={() => handleDisplayGame(game)}>
+                  {game.name} {game.first_release_date}{" "}
+                </a>
               </li>
             ))}
           </ul>

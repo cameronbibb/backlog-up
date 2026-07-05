@@ -36,6 +36,7 @@ export const refreshAccessToken = async (): Promise<RefreshResponse> => {
       withCredentials: true,
     },
   );
+  console.log(response.data);
   return response.data;
 };
 

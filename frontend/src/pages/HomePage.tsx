@@ -4,6 +4,8 @@ import { getUserGames, addUserGame } from "../services/userGames";
 import { type UserGame, type IgdbGame } from "../types";
 import { searchGames } from "../services/games";
 import { formatReleaseYear } from "../utils";
+import BoxSide from "../components/BoxSide/BoxSide";
+import GamesDrawer from "../components/GamesDrawer/GamesDrawer";
 
 function Home() {
   const { logout } = useAuth();
@@ -114,13 +116,20 @@ function Home() {
           </ul>
         )}
       </div>
-      {userGames && (
-        <ul>
-          {userGames.map((game) => {
-            return <li key={game.id}>{game.game.name}</li>;
-          })}
-        </ul>
-      )}
+      <GamesDrawer>
+        {userGames && (
+          <>
+            {userGames.map((game) => {
+              return <BoxSide key={game.id} userGame={game}></BoxSide>;
+            })}
+          </>
+        )}
+        {userGames.length === 0 && (
+          <>
+            <p>Hey! Your game drawer is empty. Are you a noob?</p>
+          </>
+        )}
+      </GamesDrawer>
       <button onClick={logout}>Logout</button>
     </>
   );

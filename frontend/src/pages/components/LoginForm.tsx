@@ -11,6 +11,9 @@ function LoginForm() {
   async function handleSubmit(e: React.SubmitEvent) {
     e.preventDefault();
     const { access_token, user } = await loginUser(email, password);
+    //need a try/catch block here for the following cases:
+    //--if user doesn't exist
+    //--if user exists but the password is wrong
     login(access_token, user);
   }
 

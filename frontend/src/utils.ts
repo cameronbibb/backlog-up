@@ -6,4 +6,8 @@ const formatReleaseYear = (timestamp: string): string => {
   }
 };
 
-export { formatReleaseYear };
+const formatPlatformName = (platformTitle: string): string => {
+  return platformTitle.split(" ")[0].toLowerCase();
+};
+
+export { formatReleaseYear, formatPlatformName };

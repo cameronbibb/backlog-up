@@ -1,11 +1,18 @@
 import "./GameListing.css";
 import { type UserGame } from "../../../types";
+import { formatPlatformName } from "../../../utils";
 
 function GameListing({ userGame }: { userGame: UserGame }) {
   return (
-    <div className="box-side">
-      <h3>{userGame.game.name}</h3>
-      <p>{userGame.status}</p>
+    <div className="game-listing">
+      <div
+        className={`platform-indicator ${formatPlatformName(userGame.platform_owned)}`}
+      ></div>
+      <div className="game-name">{userGame.game.name}</div>
+      <div className="game-details">
+        {userGame.platform_owned} (
+        {userGame.game.first_release_date.split("-")[0]})
+      </div>
     </div>
   );
 }

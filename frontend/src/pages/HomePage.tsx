@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { getUserGames, addUserGame } from "../services/userGames";
 import { type UserGame, type IgdbGame } from "../types";
 import { searchGames } from "../services/games";
 import { formatReleaseYear } from "../utils";
-import BoxSide from "../components/BoxSide/BoxSide";
-import GamesDrawer from "../components/GamesDrawer/GamesDrawer";
+import GamesList from "./components/GamesList/GamesList";
 
 function Home() {
   const { logout } = useAuth();
@@ -17,6 +16,25 @@ function Home() {
     "backlog",
   );
   const [platformOwned, setPlatformOwned] = useState("");
+
+  //List Selection
+  const [selectedList, setSelectedList] = useState<
+    "all" | "backlog" | "playing" | "completed"
+  >("all");
+
+  const filteredList = useMemo(() => {
+    if (selectedList === "all") return userGames;
+    return userGames.filter((g) => g.status === selectedList);
+  }, [userGames, selectedList]);
+
+  const backgroundImage = () => {
+    //get image url from a game
+    //->use the length of userGames array to pick a random number between 0 and length - 1
+    //->use this number as the index to choose a game
+    //->modify cover url by replacing cover_big with screenshot_huge
+    //  https://images.igdb.com/igdb/image/upload/t_screenshot_huge/co2dto.jpg
+    //->load image from game's url
+  };
 
   useEffect(() => {
     const retrieveUserGames = async () => {
@@ -60,78 +78,107 @@ function Home() {
   //-update user games on delete
 
   return (
-    <>
-      <h1>Backlog Up</h1>
-      <p>Welcome to your game collection.</p>
-      <div>
-        <label htmlFor="search"></label>
-        <input
-          type="text"
-          placeholder="search for new games"
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-        ></input>
-        <button onClick={searchForGame}>search</button>
-      </div>
-      {gameToAdd && (
-        <div>
-          <img src={gameToAdd?.cover.url} alt={gameToAdd?.name} />
-          <h3>Playlist:</h3>
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value as typeof status)}
-          >
-            <option value="backlog">backlog</option>
-            <option value="playing">playing</option>
-            <option value="completed">completed</option>
-          </select>
-          <h3>Platform:</h3>
-          <select
-            value={platformOwned}
-            onChange={(e) => setPlatformOwned(e.target.value)}
-          >
-            {gameToAdd?.platforms?.map((platform) => {
-              return (
-                <option key={platform.id} value={platform.name}>
-                  {platform.name}
-                </option>
-              );
-            })}
-          </select>
-          <div>
-            <button onClick={handleConfirmAdd}>add game</button>
+    <div className="page-wrapper">
+      <nav className="nav-bar">
+        <h1 className="logo">Backlog Up</h1>
+        <div className="account-icon">username</div>
+        {/* <button className="logout-button" onClick={logout}>
+          Logout
+        </button> */}
+      </nav>
+      <div className="hero-banner">
+        <div className="hero-background-image">
+          <div
+            className="hero-background-image-top"
+            style={{
+              backgroundImage:
+                "url(https://images.igdb.com/igdb/image/upload/t_screenshot_huge/co2dto.jpg)",
+            }}
+          ></div>
+          <div
+            className="hero-background-image-center"
+            style={{
+              backgroundImage:
+                "url(https://images.igdb.com/igdb/image/upload/t_screenshot_huge/co2dto.jpg)",
+            }}
+          ></div>
+          <div
+            className="hero-background-image-bottom"
+            style={{
+              backgroundImage:
+                "url(https://images.igdb.com/igdb/image/upload/t_screenshot_huge/co2dto.jpg)",
+            }}
+          ></div>
+          <div className="selected-list-title">
+            {selectedList === "all" ? "all games" : selectedList}
           </div>
         </div>
-      )}
-      <div>
-        {foundGames && (
-          <ul>
-            {foundGames.map((game) => (
-              <li key={game.id}>
-                <a onClick={() => handleDisplayGame(game)}>
-                  {game.name} {game.first_release_date}{" "}
-                </a>
-              </li>
-            ))}
-          </ul>
-        )}
+        <div className="list-selection-row">
+          {" "}
+          <span onClick={() => setSelectedList("all")}>ALL</span> |{" "}
+          <span onClick={() => setSelectedList("backlog")}>BACKLOG</span> |{" "}
+          <span onClick={() => setSelectedList("playing")}>PLAYING</span> |{" "}
+          <span onClick={() => setSelectedList("completed")}>COMPLETED</span>
+        </div>
       </div>
-      <GamesDrawer>
-        {userGames && (
-          <>
-            {userGames.map((game) => {
-              return <BoxSide key={game.id} userGame={game}></BoxSide>;
-            })}
-          </>
+      <div>
+        <p>Your game collection.</p>
+        <div>
+          <label htmlFor="search"></label>
+          <input
+            type="text"
+            placeholder="search for new games"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          ></input>
+          <button onClick={searchForGame}>search</button>
+        </div>
+        {gameToAdd && (
+          <div>
+            <img src={gameToAdd?.cover.url} alt={gameToAdd?.name} />
+            <h3>Playlist:</h3>
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value as typeof status)}
+            >
+              <option value="backlog">backlog</option>
+              <option value="playing">playing</option>
+              <option value="completed">completed</option>
+            </select>
+            <h3>Platform:</h3>
+            <select
+              value={platformOwned}
+              onChange={(e) => setPlatformOwned(e.target.value)}
+            >
+              {gameToAdd?.platforms?.map((platform) => {
+                return (
+                  <option key={platform.id} value={platform.name}>
+                    {platform.name}
+                  </option>
+                );
+              })}
+            </select>
+            <div>
+              <button onClick={handleConfirmAdd}>add game</button>
+            </div>
+          </div>
         )}
-        {userGames.length === 0 && (
-          <>
-            <p>Hey! Your game drawer is empty. Are you a noob?</p>
-          </>
-        )}
-      </GamesDrawer>
-      <button onClick={logout}>Logout</button>
-    </>
+        <div>
+          {foundGames && (
+            <ul>
+              {foundGames.map((game) => (
+                <li key={game.id}>
+                  <a onClick={() => handleDisplayGame(game)}>
+                    {game.name} {game.first_release_date}{" "}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        <GamesList userGames={filteredList} />
+      </div>
+    </div>
   );
 }
 

@@ -4,8 +4,8 @@ import LoginForm from "./pages/components/LoginForm";
 import RegisterForm from "./pages/components/RegisterForm";
 import Landing from "./pages/LandingPage";
 import Home from "./pages/HomePage";
-import ProtectedRoute from "./components/ProtectedRoute";
-import GuestRoute from "./components/GuestRoute";
+import ProtectedRoute from "./pages/components/ProtectedRoute";
+import GuestRoute from "./pages/components/GuestRoute";
 
 function App() {
   return (

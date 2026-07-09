@@ -21,6 +21,7 @@
 .platform-indicator {
   height: 5px;
   width: 20px;
+  border-radius: 3px;
 }
 
 .platform-indicator.xbox {
